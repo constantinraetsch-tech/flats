@@ -1,13 +1,15 @@
 {
-  "lastRun": "2026-10-16T09:40:00+02:00",
+  "lastRun": "2026-10-16T10:30:00+02:00",
   "sources": [
     "Ukio",
     "Spotahome",
     "Fotocasa",
     "Habitaclia",
     "enalquiler",
-    "HousingAnywhere",
-    "Uniplaces"
+    "Atemporal Barcelona",
+    "ShBarcelona",
+    "Monapart",
+    "yaencontre"
   ],
   "listings": [
     {
@@ -76,6 +78,74 @@
       "bathrooms": 2,
       "size": 120,
       "photo": "https://cdn.sanity.io/images/v48q37k7/production/906263568ce377e015c0c4842640e9de7cdcd0c0-3000x1998.jpg?auto=format&fit=max&q=60&w=900"
+    },
+    {
+      "id": "ukio-ravello-1336",
+      "title": "Ukio “Ravello”, Carrer d'Aribau",
+      "area": "Sant Gervasi–Galvany",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "size": 120,
+      "furnished": true,
+      "lift": true,
+      "terms": "min. 31 nights",
+      "source": "Ukio",
+      "url": "https://ukio.com/furnished-apartments/barcelona/sant-gervasi-ravello-1336",
+      "photo": "https://cdn.sanity.io/images/v48q37k7/production/ffdd2dcd418c89433e4469911370abad6af880fe-3000x2000.jpg?auto=format&fit=max&q=60&w=900",
+      "fit": "check",
+      "notes": "Very close to your saved Ukio favourites: 3 bed, 2 bath, 120 m², balcony. Price only shows after entering dates on Ukio.",
+      "foundAt": "2026-10-16T10:30:00+02:00"
+    },
+    {
+      "id": "ukio-munia-1222",
+      "title": "Ukio “Munia”, Carrer de Calvet",
+      "area": "Sant Gervasi–Galvany",
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "size": 126,
+      "furnished": true,
+      "lift": true,
+      "terms": "min. 31 nights",
+      "source": "Ukio",
+      "url": "https://ukio.com/furnished-apartments/barcelona/sarria-sant-gervasi/sant-gervasi-galvany/munia-1222",
+      "photo": "https://cdn.sanity.io/images/v48q37k7/production/58d8ed0901bfb3ef876ce1f42427ce78120d6e98-3000x1998.jpg?auto=format&fit=max&q=60&w=900",
+      "fit": "check",
+      "notes": "A bathroom for each of you, 126 m². Price shows after entering dates on Ukio.",
+      "foundAt": "2026-10-16T10:30:00+02:00"
+    },
+    {
+      "id": "ukio-torla-1245",
+      "title": "Ukio “Torla”, Sant Elies, with big terrace",
+      "area": "Sant Gervasi–Galvany",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "size": 183,
+      "furnished": true,
+      "lift": true,
+      "terms": "min. 31 nights",
+      "source": "Ukio",
+      "url": "https://ukio.com/furnished-apartments/barcelona/sarria-sant-gervasi/sant-gervasi-galvany/torla-1245",
+      "photo": "https://cdn.sanity.io/images/v48q37k7/production/409019db809f6ecd7747def725707bc2fd801ad5-3000x2000.jpg?auto=format&fit=max&q=60&w=900",
+      "fit": "check",
+      "notes": "183 m² plus an 80 m² terrace. Likely above budget given the size; check the price for your dates.",
+      "foundAt": "2026-10-16T10:30:00+02:00"
+    },
+    {
+      "id": "atemporal-dreta-terrace",
+      "title": "3-bedroom flat with terrace",
+      "area": "Dreta de l'Eixample",
+      "price": 1790,
+      "bedrooms": 3,
+      "bathrooms": 1,
+      "size": 68,
+      "furnished": true,
+      "lift": true,
+      "terms": "32 days – 11 months",
+      "source": "Atemporal Barcelona",
+      "url": "https://www.atemporalbarcelona.es/en/barcelona/eixample/monthly-rental-apartment-with-3-bedrooms-and-terrace-in-eixample-dreta",
+      "fit": "strong",
+      "notes": "Cheap at about €597 each, with a terrace. Small (68 m²) and one bathroom; utilities extra. Ask whether it's still free from 1 January.",
+      "foundAt": "2026-10-16T10:30:00+02:00"
     }
   ]
 }
