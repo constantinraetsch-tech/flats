@@ -19,7 +19,7 @@
 :root{
   --bg:#f4f6f9; --surface:#ffffff; --ink:#141c26; --muted:#5f6b78; --line:#e1e6ec;
   --accent:#1d4fc4; --accent-soft:#e8eefc; --like:#e8456b; --like-soft:#fde8ee; --nope:#4b5563;
-  --new:#c27c00; --good:#16794a; --good-soft:#e3f4ea; --warn:#b4531b; --warn-soft:#fcece2;
+  --new:#c27c00; --long:#6a3fd1; --long-soft:#efe9fd; --good:#16794a; --good-soft:#e3f4ea; --warn:#b4531b; --warn-soft:#fcece2;
   --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
   --f-body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -63,6 +63,8 @@ main.gutter{padding-block:16px calc(env(safe-area-inset-bottom,0px) + 36px);disp
 .b.new{background:var(--new);color:#fff}
 .b.strong{background:var(--good);color:#fff}
 .b.check{color:var(--warn)}
+.b.long{background:var(--long);color:#fff}
+.lt{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.04em;padding:1px 7px;border-radius:999px;background:var(--long-soft);color:var(--long);margin-left:6px;text-transform:none;vertical-align:1px}
 .stamp{position:absolute;top:28px;font-family:var(--f-display);font-weight:800;font-size:30px;padding:2px 12px;border:4px solid;border-radius:10px;opacity:0;pointer-events:none;letter-spacing:.04em}
 .stamp.like{left:20px;color:var(--like);border-color:var(--like);transform:rotate(-14deg);background:rgba(255,255,255,.85)}
 .stamp.nope{right:20px;color:var(--nope);border-color:var(--nope);transform:rotate(14deg);background:rgba(255,255,255,.85)}
@@ -160,7 +162,7 @@ main.gutter{padding-block:16px calc(env(safe-area-inset-bottom,0px) + 36px);disp
       return;
     }
     const l=q[0];
-    const badges=(isNew(l)?'<span class="b new">New</span>':"")+(l.fit==="strong"?'<span class="b strong">Strong fit</span>':l.fit==="check"?'<span class="b check">Check details</span>':"");
+    const badges=(isNew(l)?'<span class="b new">New</span>':"")+(l.leaseType==="long-term"?'<span class="b long">Long-term lease</span>':"")+(l.fit==="strong"?'<span class="b strong">Strong fit</span>':l.fit==="check"?'<span class="b check">Check details</span>':"");
     main.innerHTML=`
       <div class="left">${q.length} flat${q.length>1?"s":""} to review</div>
       <div class="stage"><article class="swipe" id="card">
@@ -234,7 +236,7 @@ main.gutter{padding-block:16px calc(env(safe-area-inset-bottom,0px) + 36px);disp
       return `<article class="item">
         <div class="th">${l.photo?`<img src="${esc(l.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:""}</div>
         <div class="bd">
-          <div class="a">${esc(l.area||"Barcelona")}</div>
+          <div class="a">${esc(l.area||"Barcelona")}${l.leaseType==="long-term"?'<span class="lt">Long-term</span>':""}</div>
           <div class="t">${esc(l.title)}</div>
           <div class="p">${l.price?`${eur(l.price)} <small>/mo · ${eur(l.price/3)} pp</small>`:`<small>Price on request</small>`}</div>
           <div class="acts">
