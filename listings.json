@@ -1,0 +1,66 @@
+{
+  "lastRun": "2026-10-16T09:40:00+02:00",
+  "sources": ["Ukio", "Spotahome", "Fotocasa", "Habitaclia", "enalquiler", "HousingAnywhere", "Uniplaces"],
+  "listings": [
+    {
+      "id": "enalquiler-7090075",
+      "title": "Flat on Carrer de Prats de Molló",
+      "area": "Sant Gervasi–Galvany",
+      "price": 3000,
+      "bedrooms": 3,
+      "bathrooms": 1,
+      "size": 85,
+      "furnished": true,
+      "lift": true,
+      "terms": "short-term, min. 32 days",
+      "source": "enalquiler.com",
+      "url": "https://enalquiler.com/alquiler_piso_barcelona/piso-en-calle-de-prats-de-mollo-sant-gervasi-galvany-barcelona_7090075.html",
+      "fit": "strong",
+      "notes": "Right at your €3,000 cap. Balcony, near Muntaner metro. Only one bathroom for three.",
+      "foundAt": "2026-10-16T09:40:00+02:00"
+    },
+    {
+      "id": "spotahome-1645634",
+      "title": "3-bedroom flat on Carrer de Puigmartí",
+      "area": "Vila de Gràcia",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "size": 104,
+      "furnished": true,
+      "terms": "short-term only",
+      "source": "Spotahome",
+      "url": "https://www.spotahome.com/barcelona/for-rent:apartments/1645634",
+      "fit": "check",
+      "notes": "Two bathrooms, AC, wooden beams, small balconies. Price shows only after picking dates: enter 1 Jan – 30 Jun 2027.",
+      "foundAt": "2026-10-16T09:40:00+02:00"
+    },
+    {
+      "id": "spotahome-1597053",
+      "title": "3-bedroom flat, Spotahome-verified",
+      "area": "Vila de Gràcia",
+      "bedrooms": 3,
+      "bathrooms": 1,
+      "size": 67,
+      "furnished": true,
+      "terms": "min. 31 nights",
+      "source": "Spotahome",
+      "url": "https://www.spotahome.com/es/barcelona/for-rent:apartments/1597053",
+      "fit": "check",
+      "notes": "Smaller (67 m²), one bathroom. Price shows after picking dates.",
+      "foundAt": "2026-10-16T09:40:00+02:00"
+    },
+    {
+      "id": "ukio-luiza-986",
+      "title": "Ukio “Luiza”, Carrer de Sant Joan",
+      "area": "Dreta de l'Eixample",
+      "bedrooms": 3,
+      "furnished": true,
+      "terms": "1–11 month stays",
+      "source": "Ukio",
+      "url": "https://ukio.com/furnished-apartments/barcelona/eixample/la-dreta-de-leixample/luiza-986",
+      "fit": "check",
+      "notes": "Same company as 4 of your saved Idealista flats. Check the price for Jan–Jun on their site; booking early can be cheaper.",
+      "foundAt": "2026-10-16T09:40:00+02:00"
+    }
+  ]
+}

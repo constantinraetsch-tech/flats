@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FLATS</title>
+<meta name="theme-color" content="#1d4fc4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FLATS">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one column of listing cards cut with the Eixample chamfer (xamfrà); criteria and status on top. */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --ink:#16202b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#1d4fc4; --accent-soft:#e3ebfb; --new:#b8860b; --new-soft:#fbf1d6; --warn:#a2541a;
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --cut:14px; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0f141a; --surface:#18202a; --ink:#e7ecf2; --muted:#9aa7b5; --line:#2a3542;
+  --accent:#7ea2ff; --accent-soft:#1d2a47; --new:#e3b341; --new-soft:#3a2f12; --warn:#f0a35e; color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-top:calc(env(safe-area-inset-top,0px) + 22px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 48px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,8vw,42px);line-height:1;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:6px 0 0}
+.refresh{font:inherit;font-size:13.5px;font-weight:600;padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--accent);cursor:pointer;flex-shrink:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted)}
+.chip b{color:var(--ink);font-weight:600}
+.status{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:10px}
+.status strong{color:var(--ink);font-weight:600}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.tab{font:inherit;font-size:13.5px;font-weight:500;padding:6px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;cursor:pointer;white-space:nowrap}
+.tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.list{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:10px;
+  clip-path:polygon(var(--cut) 0,calc(100% - var(--cut)) 0,100% var(--cut),100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,var(--cut) 100%,0 calc(100% - var(--cut)),0 var(--cut))}
+.card.is-new{box-shadow:inset 4px 0 0 var(--new)}
+.card.dim{opacity:.55}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.top>div{min-width:0}
+.area{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.ttl{font-family:var(--f-display);font-weight:600;font-size:18px;line-height:1.25;margin:2px 0 0;overflow-wrap:anywhere}
+.price{text-align:right;flex-shrink:0}
+.price .m{font-family:var(--f-mono);font-size:19px;font-variant-numeric:tabular-nums}
+.price .p{font-size:12px;color:var(--muted)}
+.specs{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted)}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px}
+.pill.new{background:var(--new-soft);color:var(--new)}
+.pill.strong{background:var(--accent-soft);color:var(--accent)}
+.pill.check{border:1px solid var(--line);color:var(--warn)}
+.notes{font-size:14px;margin:0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-top:1px dashed var(--line);padding-top:10px}
+.btn{font:inherit;font-size:13px;padding:6px 11px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.open{margin-left:auto;font-weight:600;color:var(--accent);text-decoration:none;font-size:13.5px}
+.src{font-size:12.5px;color:var(--muted);width:100%}
+.empty{background:var(--surface);padding:26px 22px;color:var(--muted);border:1px dashed var(--line);border-radius:10px}
+.empty h2{font-family:var(--f-display);font-size:19px;color:var(--ink);margin:0 0 6px}
+.foot{font-size:13.5px;color:var(--muted);border-left:3px solid var(--line);padding-left:12px}
+.foot a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div>
+      <h1>FLATS</h1>
+      <p class="sub">Barcelona, January–June 2027. Checked every morning.</p>
+    </div>
+    <button class="refresh" id="refresh">Refresh</button>
+  </div>
+
+  <div class="chips" aria-label="Search criteria">
+    <span class="chip"><b>3+</b> bedrooms</span>
+    <span class="chip">max <b>€3,000</b> · <b>€1,000</b> pp</span>
+    <span class="chip">furnished</span>
+    <span class="chip"><b>1 Jan – 30 Jun 2027</b></span>
+    <span class="chip">Vila de Gràcia</span>
+    <span class="chip">Sant Gervasi–Galvany</span>
+    <span class="chip">Dreta de l'Eixample</span>
+    <span class="chip">Nova Esquerra de l'Eixample</span>
+  </div>
+
+  <div class="status" id="status"><span>Loading flats…</span></div>
+
+  <div class="tabs" role="group" aria-label="Filter">
+    <button class="tab" data-f="active" aria-pressed="true">All</button>
+    <button class="tab" data-f="new" aria-pressed="false">New</button>
+    <button class="tab" data-f="saved" aria-pressed="false">Saved</button>
+    <button class="tab" data-f="contacted" aria-pressed="false">Contacted</button>
+    <button class="tab" data-f="hidden" aria-pressed="false">Hidden</button>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <p class="foot">Idealista isn't part of the daily check. Use the Idealista app's saved-search alerts for it. <a href="https://www.idealista.com/en/" target="_blank" rel="noopener">Open Idealista</a></p>
+</div>
+
+<script>
+(function(){
+  let data={listings:[]}, filter="active", marks={};
+  try{marks=JSON.parse(localStorage.getItem("flats-marks")||"{}")}catch(e){}
+  try{filter=localStorage.getItem("flats-filter")||"active"}catch(e){}
+  const $=s=>document.querySelector(s);
+  const eur=n=>"€"+Math.round(n).toLocaleString("en-GB");
+  const isNew=l=>l.foundAt&&(Date.now()-new Date(l.foundAt).getTime())<48*3600e3;
+  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const saveMarks=()=>{try{localStorage.setItem("flats-marks",JSON.stringify(marks))}catch(e){}};
+
+  function setTabs(){document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.f===filter)))}
+  document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.f;try{localStorage.setItem("flats-filter",filter)}catch(e){};setTabs();render()}));
+  setTabs();
+
+  function render(){
+    const all=data.listings||[];
+    const visible=all.filter(l=>marks[l.id]!=="hidden");
+    const st=$("#status");
+    st.innerHTML=`<span>Last check <strong>${data.lastRun?esc(new Date(data.lastRun).toLocaleString("en-GB",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})):"—"}</strong></span><span><strong>${visible.length}</strong> flats</span><span><strong>${visible.filter(isNew).length}</strong> new in 48h</span>`;
+    const rows=all.filter(l=>{
+      const m=marks[l.id]||"";
+      if(filter==="hidden")return m==="hidden";
+      if(m==="hidden")return false;
+      if(filter==="new")return isNew(l);
+      if(filter==="saved")return m==="saved";
+      if(filter==="contacted")return m==="contacted";
+      return true;
+    }).sort((a,b)=>(b.foundAt||"").localeCompare(a.foundAt||""));
+    const list=$("#list");
+    if(!rows.length){
+      const msg={active:["No flats yet","New matches appear here after each morning check."],new:["Nothing new in 48 hours","New flats show up here after each morning check."],saved:["No saved flats","Tap Save on a flat to keep it here."],contacted:["Nothing marked as contacted","Mark a flat once you've written to the landlord."],hidden:["Nothing hidden","Flats you hide move here."]}[filter];
+      list.innerHTML=`<div class="empty"><h2>${msg[0]}</h2>${msg[1]}</div>`;return;
+    }
+    list.innerHTML=rows.map(l=>{
+      const m=marks[l.id]||"";
+      const specs=[l.bedrooms&&`${l.bedrooms} bed`,l.bathrooms&&`${l.bathrooms} bath`,l.size&&`${l.size} m²`,l.furnished&&"furnished",l.lift&&"lift",l.terms].filter(Boolean).map(esc).join("</span><span>");
+      const fit=l.fit==="strong"?'<span class="pill strong">Strong fit</span>':l.fit==="check"?'<span class="pill check">Check details</span>':"";
+      return `<article class="card ${isNew(l)?"is-new":""} ${m==="hidden"?"dim":""}">
+        <div class="top"><div><div class="area">${esc(l.area||"Barcelona")}</div><h3 class="ttl">${esc(l.title)}</h3></div>
+        <div class="price"><div class="m">${l.price?eur(l.price):"Price on request"}</div><div class="p">${l.price?"/month · "+eur(l.price/3)+" pp":""}</div></div></div>
+        ${(isNew(l)||fit)?`<div class="pills">${isNew(l)?'<span class="pill new">New</span>':""}${fit}</div>`:""}
+        ${specs?`<div class="specs"><span>${specs}</span></div>`:""}
+        ${l.notes?`<p class="notes">${esc(l.notes)}</p>`:""}
+        <div class="actions">
+          <button class="btn" data-id="${esc(l.id)}" data-m="saved" aria-pressed="${m==="saved"}">Save</button>
+          <button class="btn" data-id="${esc(l.id)}" data-m="contacted" aria-pressed="${m==="contacted"}">Contacted</button>
+          <button class="btn" data-id="${esc(l.id)}" data-m="hidden" aria-pressed="${m==="hidden"}">${m==="hidden"?"Unhide":"Hide"}</button>
+          <a class="open" href="${esc(l.url)}" target="_blank" rel="noopener">Open ↗</a>
+          <span class="src">${esc(l.source||"")}${l.foundAt?" · found "+esc(new Date(l.foundAt).toLocaleDateString("en-GB",{day:"numeric",month:"short"})):""}</span>
+        </div></article>`;
+    }).join("");
+  }
+
+  document.addEventListener("click",e=>{
+    const b=e.target.closest(".btn[data-m]");if(!b)return;
+    const id=b.dataset.id,want=b.dataset.m;
+    marks[id]=marks[id]===want?"":want;saveMarks();render();
+  });
+
+  async function load(){
+    const btn=$("#refresh");btn.textContent="Loading…";
+    try{
+      const r=await fetch("listings.json?t="+Date.now(),{cache:"no-store"});
+      if(!r.ok)throw new Error(r.status);
+      data=await r.json();render();
+    }catch(e){
+      if(!(data.listings||[]).length)$("#status").innerHTML="<span>Couldn't load flats. Check your connection and tap Refresh.</span>";
+    }finally{btn.textContent="Refresh"}
+  }
+  $("#refresh").addEventListener("click",load);
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")load()});
+  load();
+  if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
+</script>
+</body>
+</html>
