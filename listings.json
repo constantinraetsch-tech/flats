@@ -1,6 +1,14 @@
 {
   "lastRun": "2026-10-16T09:40:00+02:00",
-  "sources": ["Ukio", "Spotahome", "Fotocasa", "Habitaclia", "enalquiler", "HousingAnywhere", "Uniplaces"],
+  "sources": [
+    "Ukio",
+    "Spotahome",
+    "Fotocasa",
+    "Habitaclia",
+    "enalquiler",
+    "HousingAnywhere",
+    "Uniplaces"
+  ],
   "listings": [
     {
       "id": "enalquiler-7090075",
@@ -30,9 +38,11 @@
       "terms": "short-term only",
       "source": "Spotahome",
       "url": "https://www.spotahome.com/barcelona/for-rent:apartments/1645634",
-      "fit": "check",
-      "notes": "Two bathrooms, AC, wooden beams, small balconies. Price shows only after picking dates: enter 1 Jan – 30 Jun 2027.",
-      "foundAt": "2026-10-16T09:40:00+02:00"
+      "fit": "strong",
+      "notes": "Great value: €650 each, 2 bathrooms, AC, wooden beams, small balconies. Utilities not included; confirm the price for 1 Jan – 30 Jun 2027.",
+      "foundAt": "2026-10-16T09:40:00+02:00",
+      "price": 1950,
+      "photo": "https://photos.spotahome.com/fsobscale_1600_900_nonverified_ur_15_50/ecb9e0a7e6ffda2a83a91cd4be0e0e381c2156e4d02ebb97b77c3cf6.webp"
     },
     {
       "id": "spotahome-1597053",
@@ -46,8 +56,10 @@
       "source": "Spotahome",
       "url": "https://www.spotahome.com/es/barcelona/for-rent:apartments/1597053",
       "fit": "check",
-      "notes": "Smaller (67 m²), one bathroom. Price shows after picking dates.",
-      "foundAt": "2026-10-16T09:40:00+02:00"
+      "notes": "Slightly over budget (from €3,062; exact price after picking dates). Smaller at 67 m² with one bathroom.",
+      "foundAt": "2026-10-16T09:40:00+02:00",
+      "price": 3062,
+      "photo": "https://photos.spotahome.com/fsobscale_1600_900_nonverified_ur_15_50/7a26e70f7cb79952d0bcf385eb3da0bf658e8a054b7378f26e4e2df8.webp"
     },
     {
       "id": "ukio-luiza-986",
@@ -60,7 +72,10 @@
       "url": "https://ukio.com/furnished-apartments/barcelona/eixample/la-dreta-de-leixample/luiza-986",
       "fit": "check",
       "notes": "Same company as 4 of your saved Idealista flats. Check the price for Jan–Jun on their site; booking early can be cheaper.",
-      "foundAt": "2026-10-16T09:40:00+02:00"
+      "foundAt": "2026-10-16T09:40:00+02:00",
+      "bathrooms": 2,
+      "size": 120,
+      "photo": "https://cdn.sanity.io/images/v48q37k7/production/906263568ce377e015c0c4842640e9de7cdcd0c0-3000x1998.jpg?auto=format&fit=max&q=60&w=900"
     }
   ]
 }
