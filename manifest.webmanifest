@@ -1,6 +1,6 @@
 {
-  "name": "FLATS Barcelona",
-  "short_name": "FLATS",
+  "name": "Swipe Your Flat",
+  "short_name": "Swipe Flat",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

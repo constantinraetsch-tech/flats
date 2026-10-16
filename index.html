@@ -3,22 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>FLATS</title>
+<title>Swipe Your Flat</title>
 <meta name="theme-color" content="#f4f6f9">
 <meta name="color-scheme" content="light">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="FLATS">
+<meta name="apple-mobile-web-app-title" content="Swipe Flat">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
-/* Light only. Layout: sticky top bar (title, stats, filters), then photo-first cards — one column on phones, two on wide screens. */
+/* Light only. Layout: top bar with three sections (Discover / Liked / Declined). Discover = one big swipeable card; Liked and Declined = compact lists. */
 :root{
   --bg:#f4f6f9; --surface:#ffffff; --ink:#141c26; --muted:#5f6b78; --line:#e1e6ec;
-  --accent:#1d4fc4; --accent-soft:#e8eefc; --new:#c27c00; --good:#16794a; --good-soft:#e3f4ea; --warn:#b4531b; --warn-soft:#fcece2;
+  --accent:#1d4fc4; --accent-soft:#e8eefc; --like:#e8456b; --like-soft:#fde8ee; --nope:#4b5563;
+  --new:#c27c00; --good:#16794a; --good-soft:#e3f4ea; --warn:#b4531b; --warn-soft:#fcece2;
   --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
   --f-body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -26,59 +27,80 @@
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
-.gutter{max-width:900px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.bar{position:sticky;top:0;z-index:5;background:rgba(244,246,249,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
-.bar .gutter{padding-block:14px 12px;display:flex;flex-direction:column;gap:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;overscroll-behavior-x:none}
+.gutter{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar{position:sticky;top:0;z-index:5;background:rgba(244,246,249,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.bar .gutter{padding-block:12px;display:flex;flex-direction:column;gap:10px}
 .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-h1{font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1;margin:0;letter-spacing:-.01em}
-h1 span{color:var(--accent)}
-.crit{font-size:12.5px;color:var(--muted);margin-top:3px}
-.refresh{font:inherit;font-size:13px;font-weight:600;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--accent);cursor:pointer;flex-shrink:0}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
-.stat b{display:block;font-family:var(--f-mono);font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
-.stat span{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.controls{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.tabs{display:flex;gap:4px;background:var(--line);padding:3px;border-radius:10px;overflow-x:auto;max-width:100%}
-.tab{font:inherit;font-size:13px;font-weight:500;padding:5px 11px;border:0;background:transparent;color:var(--muted);border-radius:7px;cursor:pointer;white-space:nowrap}
+h1{font-family:var(--f-display);font-weight:800;font-size:24px;line-height:1;margin:0;letter-spacing:-.01em}
+h1 span{color:var(--like)}
+.crit{font-size:12px;color:var(--muted);margin-top:3px}
+.refresh{font:inherit;font-size:12.5px;font-weight:600;padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--accent);cursor:pointer;flex-shrink:0}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--line);padding:3px;border-radius:12px}
+.tab{font:inherit;font-size:13.5px;font-weight:500;padding:7px 6px;border:0;background:transparent;color:var(--muted);border-radius:9px;cursor:pointer;display:flex;gap:6px;justify-content:center;align-items:center}
 .tab[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(20,28,38,.08)}
-.sort{font:inherit;font-size:13px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
-button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-main.gutter{padding-block:18px calc(env(safe-area-inset-bottom,0px) + 40px);display:flex;flex-direction:column;gap:18px}
-.list{display:grid;grid-template-columns:1fr;gap:16px}
-@media (min-width:720px){.list{grid-template-columns:1fr 1fr}}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-.card.dim{opacity:.55}
-.ph{position:relative;aspect-ratio:16/10;max-width:100%;background:linear-gradient(135deg,#e8eefc,#dfe5ee);display:block}
-.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.ph .none{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px}
-.badges{position:absolute;top:10px;left:10px;display:flex;gap:6px;flex-wrap:wrap}
+.count{font-family:var(--f-mono);font-size:11.5px;padding:0 6px;border-radius:999px;background:var(--bg);color:var(--muted)}
+.tab[data-v="liked"] .count{background:var(--like-soft);color:var(--like)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main.gutter{padding-block:16px calc(env(safe-area-inset-bottom,0px) + 36px);display:flex;flex-direction:column;gap:14px}
+
+/* Discover */
+.left{font-size:13px;color:var(--muted);text-align:center}
+.stage{position:relative;touch-action:pan-y}
+.swipe{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 8px 24px rgba(20,28,38,.08);will-change:transform;user-select:none;-webkit-user-select:none}
+.swipe.anim{transition:transform .32s ease,opacity .32s ease}
+.photo{position:relative;aspect-ratio:4/4.4;max-height:58vh;width:100%;max-width:100%;background:linear-gradient(135deg,#e8eefc,#dfe5ee)}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.photo .none{position:absolute;inset:0;display:grid;place-items:start center;padding-top:30%;color:var(--muted);font-size:13px}
+.shade{position:absolute;inset:auto 0 0 0;height:55%;background:linear-gradient(to top,rgba(10,14,20,.78),rgba(10,14,20,0));pointer-events:none}
+.over{position:absolute;left:18px;right:18px;bottom:84px;color:#fff;pointer-events:none}
+.over .area{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;opacity:.9}
+.over .ttl{font-family:var(--f-display);font-weight:700;font-size:21px;line-height:1.2;margin:2px 0 4px;overflow-wrap:anywhere}
+.over .pr{font-family:var(--f-mono);font-size:20px;font-weight:600}
+.over .pr small{font-family:var(--f-body);font-size:13px;font-weight:500;opacity:.85}
+.badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;flex-wrap:wrap}
 .b{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .b.new{background:var(--new);color:#fff}
 .b.strong{background:var(--good);color:#fff}
-.b.check{background:var(--surface);color:var(--warn)}
-.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
-.pr{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.pr .m{font-family:var(--f-mono);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
-.pr .pp{font-size:13px;font-weight:600;padding:1px 7px;border-radius:6px}
+.b.check{color:var(--warn)}
+.stamp{position:absolute;top:28px;font-family:var(--f-display);font-weight:800;font-size:30px;padding:2px 12px;border:4px solid;border-radius:10px;opacity:0;pointer-events:none;letter-spacing:.04em}
+.stamp.like{left:20px;color:var(--like);border-color:var(--like);transform:rotate(-14deg);background:rgba(255,255,255,.85)}
+.stamp.nope{right:20px;color:var(--nope);border-color:var(--nope);transform:rotate(14deg);background:rgba(255,255,255,.85)}
+.rbtn{position:absolute;bottom:14px;width:60px;height:60px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;background:var(--surface);box-shadow:0 4px 14px rgba(0,0,0,.25);font-size:26px;line-height:1}
+.rbtn.x{left:16px;color:var(--nope)}
+.rbtn.h{right:16px;color:var(--like)}
+.rbtn:active{transform:scale(.92)}
+.info{padding:14px 18px 18px;display:flex;flex-direction:column;gap:10px}
+.specs{display:flex;flex-wrap:wrap;gap:6px}
+.spec{font-size:12.5px;padding:2px 8px;border-radius:6px;background:var(--bg)}
+.pp{font-size:12.5px;font-weight:600;padding:2px 8px;border-radius:6px}
 .pp.ok{background:var(--good-soft);color:var(--good)}
 .pp.over{background:var(--warn-soft);color:var(--warn)}
-.pr .u{font-size:13px;color:var(--muted)}
-.area{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
-.ttl{font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1.25;margin:0;overflow-wrap:anywhere}
-.specs{display:flex;flex-wrap:wrap;gap:6px}
-.spec{font-size:12.5px;padding:2px 8px;border-radius:6px;background:var(--bg);color:var(--ink)}
-.notes{font-size:13.5px;color:var(--muted);margin:0}
+.notes{font-size:14px;color:var(--ink);margin:0}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .src{font-size:12px;color:var(--muted)}
-.actions{display:flex;gap:6px;align-items:center;margin-top:auto;padding-top:10px;border-top:1px solid var(--line)}
-.btn{font:inherit;font-size:13px;font-weight:500;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-.btn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
-.open{margin-left:auto;font-size:13px;font-weight:600;padding:7px 12px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;white-space:nowrap}
-.empty{background:var(--surface);padding:26px 22px;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
-.empty h2{font-family:var(--f-display);font-size:19px;color:var(--ink);margin:0 0 6px}
-.foot{font-size:13px;color:var(--muted)}
+.open{font-size:13px;font-weight:600;padding:7px 12px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;white-space:nowrap}
+.hint{font-size:12.5px;color:var(--muted);text-align:center}
+
+/* Lists */
+.list{display:flex;flex-direction:column;gap:10px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:14px;display:grid;grid-template-columns:96px 1fr;overflow:hidden}
+.item .th{position:relative;background:linear-gradient(135deg,#e8eefc,#dfe5ee);min-height:100%}
+.item .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.item .bd{padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.item .t{font-weight:600;font-size:14.5px;line-height:1.25;overflow-wrap:anywhere}
+.item .a{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.item .p{font-family:var(--f-mono);font-size:15px;font-weight:600}
+.item .p small{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:500}
+.acts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.btn{font:inherit;font-size:12.5px;font-weight:500;padding:5px 9px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none}
+.btn[aria-pressed="true"]{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.btn.link{color:var(--accent);font-weight:600}
+.empty{background:var(--surface);padding:26px 22px;color:var(--muted);border:1px dashed var(--line);border-radius:16px;text-align:center}
+.empty h2{font-family:var(--f-display);font-size:20px;color:var(--ink);margin:0 0 6px}
+.foot{font-size:12.5px;color:var(--muted);text-align:center}
 .foot a{color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.swipe.anim{transition:opacity .2s}}
 </style>
 </head>
 <body>
@@ -86,112 +108,167 @@ main.gutter{padding-block:18px calc(env(safe-area-inset-bottom,0px) + 40px);disp
   <div class="gutter">
     <div class="row">
       <div>
-        <h1>FLATS<span>.</span></h1>
+        <h1>Swipe Your Flat<span>.</span></h1>
         <div class="crit">3+ bed · max €3,000 · furnished · 1 Jan – 30 Jun 2027</div>
       </div>
       <button class="refresh" id="refresh">Refresh</button>
     </div>
-    <div class="stats">
-      <div class="stat"><b id="s-all">–</b><span>Flats</span></div>
-      <div class="stat"><b id="s-new">–</b><span>New 48h</span></div>
-      <div class="stat"><b id="s-saved">–</b><span>Saved</span></div>
-    </div>
-    <div class="controls">
-      <div class="tabs" role="group" aria-label="Filter">
-        <button class="tab" data-f="active" aria-pressed="true">All</button>
-        <button class="tab" data-f="new" aria-pressed="false">New</button>
-        <button class="tab" data-f="saved" aria-pressed="false">Saved</button>
-        <button class="tab" data-f="contacted" aria-pressed="false">Contacted</button>
-        <button class="tab" data-f="hidden" aria-pressed="false">Hidden</button>
-      </div>
-      <select class="sort" id="sort" aria-label="Sort">
-        <option value="new">Newest</option>
-        <option value="cheap">Cheapest</option>
-        <option value="fit">Best fit</option>
-      </select>
+    <div class="tabs" role="group" aria-label="Sections">
+      <button class="tab" data-v="discover" aria-pressed="true">Discover <span class="count" id="c-discover">0</span></button>
+      <button class="tab" data-v="liked" aria-pressed="false">♥ Liked <span class="count" id="c-liked">0</span></button>
+      <button class="tab" data-v="declined" aria-pressed="false">✕ Declined <span class="count" id="c-declined">0</span></button>
     </div>
   </div>
 </header>
 
-<main class="gutter">
-  <div class="list" id="list"><div class="empty"><h2>Loading flats…</h2>One moment.</div></div>
-  <p class="foot" id="foot"></p>
-  <p class="foot">Areas: Vila de Gràcia, Sant Gervasi–Galvany, Dreta and Nova Esquerra de l'Eixample. Idealista isn't part of the daily check; use its app alerts. <a href="https://www.idealista.com/en/" target="_blank" rel="noopener">Open Idealista</a></p>
-</main>
+<main class="gutter" id="main"><div class="empty"><h2>Loading flats…</h2>One moment.</div></main>
 
 <script>
 (function(){
-  let data={listings:[]}, filter="active", sort="new", marks={};
-  try{marks=JSON.parse(localStorage.getItem("flats-marks")||"{}")}catch(e){}
-  try{filter=localStorage.getItem("flats-filter")||"active";sort=localStorage.getItem("flats-sort")||"new"}catch(e){}
+  let data={listings:[]}, view="discover", marks={};
+  // marks[id] = {s:"liked"|"declined", c:true(contacted), at:ISO}
+  try{
+    const raw=JSON.parse(localStorage.getItem("swipe-marks")||"null");
+    if(raw) marks=raw;
+    else { // migrate from the earlier version
+      const old=JSON.parse(localStorage.getItem("flats-marks")||"{}");
+      for(const k in old){ if(old[k]==="saved")marks[k]={s:"liked"}; if(old[k]==="contacted")marks[k]={s:"liked",c:true}; if(old[k]==="hidden")marks[k]={s:"declined"}; }
+    }
+  }catch(e){}
+  try{view=localStorage.getItem("swipe-view")||"discover"}catch(e){}
   const $=s=>document.querySelector(s);
   const eur=n=>"€"+Math.round(n).toLocaleString("en-GB");
   const isNew=l=>l.foundAt&&(Date.now()-new Date(l.foundAt).getTime())<48*3600e3;
   const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const store=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
-  $("#sort").value=sort;
-
-  function setTabs(){document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.f===filter)))}
-  document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.f;store("flats-filter",filter);setTabs();render()}));
-  $("#sort").addEventListener("change",e=>{sort=e.target.value;store("flats-sort",sort);render()});
-  setTabs();
-
+  const save=()=>{try{localStorage.setItem("swipe-marks",JSON.stringify(marks))}catch(e){}};
+  const state=l=>marks[l.id]?.s||"";
   const fitRank=l=>l.fit==="strong"?0:l.fit==="check"?1:2;
-  function render(){
-    const all=data.listings||[];
-    const vis=all.filter(l=>marks[l.id]!=="hidden");
-    $("#s-all").textContent=vis.length;
-    $("#s-new").textContent=vis.filter(isNew).length;
-    $("#s-saved").textContent=all.filter(l=>marks[l.id]==="saved").length;
-    $("#foot").textContent=data.lastRun?"Last check: "+new Date(data.lastRun).toLocaleString("en-GB",{weekday:"long",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+(data.sources?.length?" · "+data.sources.join(", "):""):"";
-    let rows=all.filter(l=>{
-      const m=marks[l.id]||"";
-      if(filter==="hidden")return m==="hidden";
-      if(m==="hidden")return false;
-      if(filter==="new")return isNew(l);
-      if(filter==="saved")return m==="saved";
-      if(filter==="contacted")return m==="contacted";
-      return true;
-    });
-    rows.sort(sort==="cheap"?(a,b)=>(a.price??1e9)-(b.price??1e9):sort==="fit"?(a,b)=>fitRank(a)-fitRank(b)||(a.price??1e9)-(b.price??1e9):(a,b)=>(b.foundAt||"").localeCompare(a.foundAt||""));
-    const list=$("#list");
-    if(!rows.length){
-      const msg={active:["No flats yet","New matches appear here after each morning check."],new:["Nothing new in 48 hours","New flats show up here after each morning check."],saved:["No saved flats","Tap Save on a flat to keep it here."],contacted:["Nothing marked as contacted","Mark a flat once you've written to the landlord."],hidden:["Nothing hidden","Flats you hide move here."]}[filter];
-      list.innerHTML=`<div class="empty"><h2>${msg[0]}</h2>${msg[1]}</div>`;return;
+  const queue=()=>(data.listings||[]).filter(l=>!state(l)).sort((a,b)=>(isNew(b)-isNew(a))||fitRank(a)-fitRank(b)||(a.price??1e9)-(b.price??1e9));
+
+  document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{view=b.dataset.v;try{localStorage.setItem("swipe-view",view)}catch(e){};render()}));
+
+  function specsHtml(l){
+    const pp=l.price?l.price/3:null;
+    return [pp?`<span class="pp ${pp<=1000?"ok":"over"}">${eur(pp)} pp</span>`:"",
+      ...[l.bedrooms&&`${l.bedrooms} bed`,l.bathrooms&&`${l.bathrooms} bath`,l.size&&`${l.size} m²`,l.furnished&&"Furnished",l.lift&&"Lift",l.terms].filter(Boolean).map(s=>`<span class="spec">${esc(s)}</span>`)].join("");
+  }
+
+  function renderDiscover(){
+    const q=queue(), main=$("#main");
+    if(!q.length){
+      main.innerHTML=`<div class="empty"><h2>You're all caught up</h2>New flats land here after each morning check. You'll get a notification when they do.</div>`+foot();
+      return;
     }
-    list.innerHTML=rows.map(l=>{
-      const m=marks[l.id]||"";
-      const pp=l.price?l.price/3:null;
-      const specs=[l.bedrooms&&`${l.bedrooms} bed`,l.bathrooms&&`${l.bathrooms} bath`,l.size&&`${l.size} m²`,l.furnished&&"Furnished",l.lift&&"Lift",l.terms].filter(Boolean).map(s=>`<span class="spec">${esc(s)}</span>`).join("");
-      const badges=(isNew(l)?'<span class="b new">New</span>':"")+(l.fit==="strong"?'<span class="b strong">Strong fit</span>':l.fit==="check"?'<span class="b check">Check details</span>':"");
-      return `<article class="card ${m==="hidden"?"dim":""}">
-        <a class="ph" href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="Open listing">
+    const l=q[0];
+    const badges=(isNew(l)?'<span class="b new">New</span>':"")+(l.fit==="strong"?'<span class="b strong">Strong fit</span>':l.fit==="check"?'<span class="b check">Check details</span>':"");
+    main.innerHTML=`
+      <div class="left">${q.length} flat${q.length>1?"s":""} to review</div>
+      <div class="stage"><article class="swipe" id="card">
+        <div class="photo">
           <span class="none">No photo · ${esc(l.source||"")}</span>
-          ${l.photo?`<img src="${esc(l.photo)}" alt="${esc(l.title)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:""}
-          ${badges?`<span class="badges">${badges}</span>`:""}
-        </a>
-        <div class="body">
-          <div class="pr">${l.price?`<span class="m">${eur(l.price)}</span><span class="u">/mo</span><span class="pp ${pp<=1000?"ok":"over"}">${eur(pp)} pp</span>`:`<span class="m" style="font-size:17px">Price on request</span>`}</div>
-          <div class="area">${esc(l.area||"Barcelona")}</div>
-          <h3 class="ttl">${esc(l.title)}</h3>
-          ${specs?`<div class="specs">${specs}</div>`:""}
-          ${l.notes?`<p class="notes">${esc(l.notes)}</p>`:""}
-          <div class="src">${esc(l.source||"")}${l.foundAt?" · found "+esc(new Date(l.foundAt).toLocaleDateString("en-GB",{day:"numeric",month:"short"})):""}</div>
-          <div class="actions">
-            <button class="btn" data-id="${esc(l.id)}" data-m="saved" aria-pressed="${m==="saved"}">${m==="saved"?"★ Saved":"☆ Save"}</button>
-            <button class="btn" data-id="${esc(l.id)}" data-m="contacted" aria-pressed="${m==="contacted"}">✓ Contacted</button>
-            <button class="btn" data-id="${esc(l.id)}" data-m="hidden" aria-pressed="${m==="hidden"}">${m==="hidden"?"Unhide":"Hide"}</button>
-            <a class="open" href="${esc(l.url)}" target="_blank" rel="noopener">Open ↗</a>
+          ${l.photo?`<img src="${esc(l.photo)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:""}
+          <div class="shade"></div>
+          ${badges?`<div class="badges">${badges}</div>`:""}
+          <div class="stamp like" id="st-like">LIKE</div>
+          <div class="stamp nope" id="st-nope">NOPE</div>
+          <div class="over">
+            <div class="area">${esc(l.area||"Barcelona")}</div>
+            <div class="ttl">${esc(l.title)}</div>
+            <div class="pr">${l.price?`${eur(l.price)} <small>/ month</small>`:`<small>Price on request</small>`}</div>
           </div>
-        </div></article>`;
-    }).join("");
+          <button class="rbtn x" id="b-x" aria-label="Decline this flat">✕</button>
+          <button class="rbtn h" id="b-h" aria-label="Like this flat">♥</button>
+        </div>
+        <div class="info">
+          <div class="specs">${specsHtml(l)}</div>
+          ${l.notes?`<p class="notes">${esc(l.notes)}</p>`:""}
+          <div class="meta"><span class="src">${esc(l.source||"")}${l.foundAt?" · found "+esc(new Date(l.foundAt).toLocaleDateString("en-GB",{day:"numeric",month:"short"})):""}</span>
+          <a class="open" href="${esc(l.url)}" target="_blank" rel="noopener">Open listing ↗</a></div>
+        </div>
+      </article></div>
+      <div class="hint">Swipe right or tap ♥ to like · swipe left or tap ✕ to decline</div>`+foot();
+    $("#b-h").addEventListener("click",()=>decide(l,"liked"));
+    $("#b-x").addEventListener("click",()=>decide(l,"declined"));
+    attachSwipe($("#card"),l);
+  }
+
+  function decide(l,s){
+    const card=$("#card");
+    marks[l.id]={s,at:new Date().toISOString()};save();
+    if(!card){render();return}
+    card.classList.add("anim");
+    const dir=s==="liked"?1:-1;
+    card.style.transform=`translateX(${dir*130}%) rotate(${dir*18}deg)`;card.style.opacity="0";
+    setTimeout(render,300);
+  }
+
+  function attachSwipe(card,l){
+    let x0=null,y0=null,dx=0,drag=false;
+    const lk=$("#st-like"),np=$("#st-nope");
+    card.addEventListener("pointerdown",e=>{if(e.target.closest("button,a"))return;x0=e.clientX;y0=e.clientY;dx=0;drag=false;card.classList.remove("anim")});
+    card.addEventListener("pointermove",e=>{
+      if(x0===null)return;
+      dx=e.clientX-x0;const dy=e.clientY-y0;
+      if(!drag&&Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)){drag=true;try{card.setPointerCapture(e.pointerId)}catch(_){}}
+      if(!drag)return;
+      card.style.transform=`translateX(${dx}px) rotate(${dx/18}deg)`;
+      lk.style.opacity=Math.max(0,Math.min(1,dx/100));np.style.opacity=Math.max(0,Math.min(1,-dx/100));
+    });
+    const end=()=>{
+      if(x0===null)return;x0=null;
+      if(drag&&Math.abs(dx)>100){decide(l,dx>0?"liked":"declined");return}
+      card.classList.add("anim");card.style.transform="";lk.style.opacity=0;np.style.opacity=0;
+    };
+    card.addEventListener("pointerup",end);card.addEventListener("pointercancel",end);
+  }
+
+  function renderList(kind){
+    const rows=(data.listings||[]).filter(l=>state(l)===kind).sort((a,b)=>(marks[b.id]?.at||"").localeCompare(marks[a.id]?.at||""));
+    const main=$("#main");
+    if(!rows.length){
+      main.innerHTML=kind==="liked"?`<div class="empty"><h2>No liked flats yet</h2>Tap ♥ on a flat in Discover and it lands here.</div>`:`<div class="empty"><h2>Nothing declined</h2>Flats you ✕ move here, so you can change your mind later.</div>`;
+      main.innerHTML+=foot();return;
+    }
+    main.innerHTML=`<div class="list">${rows.map(l=>{
+      const c=!!marks[l.id]?.c;
+      return `<article class="item">
+        <div class="th">${l.photo?`<img src="${esc(l.photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:""}</div>
+        <div class="bd">
+          <div class="a">${esc(l.area||"Barcelona")}</div>
+          <div class="t">${esc(l.title)}</div>
+          <div class="p">${l.price?`${eur(l.price)} <small>/mo · ${eur(l.price/3)} pp</small>`:`<small>Price on request</small>`}</div>
+          <div class="acts">
+            <a class="btn link" href="${esc(l.url)}" target="_blank" rel="noopener">Open ↗</a>
+            ${kind==="liked"
+              ?`<button class="btn" data-act="contact" data-id="${esc(l.id)}" aria-pressed="${c}">${c?"✓ Contacted":"Mark contacted"}</button><button class="btn" data-act="decline" data-id="${esc(l.id)}">✕</button>`
+              :`<button class="btn" data-act="like" data-id="${esc(l.id)}">♥ Like instead</button><button class="btn" data-act="undo" data-id="${esc(l.id)}">Back to Discover</button>`}
+          </div>
+        </div></article>`;}).join("")}</div>`+foot();
   }
 
   document.addEventListener("click",e=>{
-    const b=e.target.closest(".btn[data-m]");if(!b)return;
-    const id=b.dataset.id,want=b.dataset.m;
-    marks[id]=marks[id]===want?"":want;store("flats-marks",JSON.stringify(marks));render();
+    const b=e.target.closest("[data-act]");if(!b)return;
+    const id=b.dataset.id,a=b.dataset.act;
+    if(a==="contact")marks[id]={...marks[id],c:!marks[id]?.c};
+    if(a==="decline")marks[id]={s:"declined",at:new Date().toISOString()};
+    if(a==="like")marks[id]={s:"liked",at:new Date().toISOString()};
+    if(a==="undo")delete marks[id];
+    save();render();
   });
+
+  function foot(){
+    const t=data.lastRun?"Last check "+new Date(data.lastRun).toLocaleString("en-GB",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"";
+    return `<p class="foot">${esc(t)}${t?" · ":""}Idealista isn't in the daily check; use its app alerts. <a href="https://www.idealista.com/en/" target="_blank" rel="noopener">Open Idealista</a></p>`;
+  }
+
+  function render(){
+    const all=data.listings||[];
+    $("#c-discover").textContent=queue().length;
+    $("#c-liked").textContent=all.filter(l=>state(l)==="liked").length;
+    $("#c-declined").textContent=all.filter(l=>state(l)==="declined").length;
+    document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===view)));
+    if(view==="discover")renderDiscover();else renderList(view);
+  }
 
   async function load(){
     const btn=$("#refresh");btn.textContent="Loading…";
@@ -200,7 +277,7 @@ main.gutter{padding-block:18px calc(env(safe-area-inset-bottom,0px) + 40px);disp
       if(!r.ok)throw new Error(r.status);
       data=await r.json();render();
     }catch(e){
-      if(!(data.listings||[]).length)$("#list").innerHTML='<div class="empty"><h2>Couldn\'t load flats</h2>Check your connection and tap Refresh.</div>';
+      if(!(data.listings||[]).length)$("#main").innerHTML='<div class="empty"><h2>Couldn\'t load flats</h2>Check your connection and tap Refresh.</div>';
     }finally{btn.textContent="Refresh"}
   }
   $("#refresh").addEventListener("click",load);
